@@ -1,21 +1,39 @@
-function getData(){
-// console.log("get Data"); 
-const xhr = new XMLHttpRequest();
-xhr.onload = function(){
-    // const resText = this.responseText;
-    // const data = JSON.parse(resText)
-    // console.log(data);
+function sendRequest(method,url,data){
 
-    const data = this.response;
-    console.log(data);
+    const promise = new Promise((res,rej)=>{
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.responseType="json"
+        xhr.send(data);
+
+        xhr.onload = function(){
+            const responseData = this.response;
+            res(responseData);
+        }
+    }) ;
+
+   return promise
+    
 }
-xhr.open("GET", "https://jsonplaceholder.typicode.com/todos/1");
-xhr.responseType="json"
-xhr.send();
+
+function getData(){
+
+    sendRequest("GET","https://jsonplaceholder.typicode.com/todos/1")
+    .then(data => console.log(data));
+    
 }
 
 function sendData(){
-console.log("send Data");
+
+    const data = {
+        title: 'foo',
+        body: 'bar',
+        userId: 1,
+      }
+    sendRequest("POST","https://jsonplaceholder.typicode.com/posts",JSON.stringify(data))
+    .then(responseData=>console.log(responseData));
+
+
 
 }
 
