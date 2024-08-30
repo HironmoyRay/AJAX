@@ -7,9 +7,19 @@ function sendRequest(method,url,data){
         xhr.send(data);
 
         xhr.onload = function(){
-            const responseData = this.response;
-            res(responseData);
+            //application error Handling
+        if(this.status >=400){
+            rej(`There was an Error. The Error is ${this.status}`)
+            }
+        else{
+            res(this.response);
+            }
         }
+
+        xhr.onerror = function(){
+            rej("There was an Error");
+        }
+
     }) ;
 
    return promise
@@ -18,8 +28,9 @@ function sendRequest(method,url,data){
 
 function getData(){
 
-    sendRequest("GET","https://jsonplaceholder.typicode.com/todos/1")
-    .then(data => console.log(data));
+    sendRequest("GET","https://jsonplaceholder.typicode.com/todos/2")
+    .then(data => console.log(data))
+    .catch(err=>console.log(err))
     
 }
 
